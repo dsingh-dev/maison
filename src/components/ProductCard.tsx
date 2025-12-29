@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ShoppingBag, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Product } from "@/data/products";
+import type { Product } from "@/hooks/useProducts";
 
 interface ProductCardProps {
   product: Product;
@@ -10,6 +10,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
+  const categoryName = product.categories?.name || "Uncategorized";
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -20,7 +22,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       <Link to={`/product/${product.id}`}>
         <div className="relative aspect-[3/4] bg-secondary rounded-lg overflow-hidden">
           <img
-            src={product.image}
+            src={product.image || "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600&q=80"}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -29,7 +31,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-300" />
           
           {/* Sale Badge */}
-          {product.originalPrice && (
+          {product.original_price && (
             <span className="absolute top-4 left-4 bg-accent text-accent-foreground text-xs font-medium px-3 py-1 rounded-full">
               Sale
             </span>
@@ -54,12 +56,12 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             {product.name}
           </h3>
         </Link>
-        <p className="text-sm text-muted-foreground">{product.category}</p>
+        <p className="text-sm text-muted-foreground">{categoryName}</p>
         <div className="flex items-center gap-2">
           <span className="font-medium">${product.price}</span>
-          {product.originalPrice && (
+          {product.original_price && (
             <span className="text-sm text-muted-foreground line-through">
-              ${product.originalPrice}
+              ${product.original_price}
             </span>
           )}
         </div>
